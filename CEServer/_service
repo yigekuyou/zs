@@ -1,0 +1,9 @@
+<services>
+  <service name="obs_scm">
+    <param name="scm">git</param>
+    <param name="url">https://github.com/cheat-engine/cheat-engine.git</param>
+    <param name="include">Cheat Engine/ceserver</param>
+    <param name="filename">ceserver</param>
+  </service>
+  <service name="set_version" mode="buildtime"/>
+</services>
