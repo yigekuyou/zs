@@ -1,0 +1,21 @@
+<services>
+  <service name="obs_scm">
+    <param name="url">https://github.com/yuzu-emu/yuzu-mainline.git</param>
+    <param name="scm">git</param>
+    <param name="versionformat">@PARENT_TAG@@TAG_OFFSET@</param>
+    <param name="versionrewrite-pattern">mainline-(\d)-(\d{4})(\d)</param>
+    <param name="versionrewrite-replacement">\2.\3</param>
+    <param name="changesgenerate">enable</param>
+    <param name="submodules">enable</param>
+    <param name="revision">master</param>
+    <param name="filename">yuzu</param>
+</service>
+  <service name="set_version" mode="buildtime">
+    <param name="basename">yuzu</param>
+ </service>
+<service name="download_url">
+  <param name="host">api.yuzu-emu.org</param>
+  <param name="protocol">https</param>
+  <param name="path">/gamedb/</param>
+   <param name="filename">compatibility_list.json</param>
+  </service> </services>
