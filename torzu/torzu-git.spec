@@ -39,6 +39,7 @@ BuildRequires:	graphviz
 BuildRequires:	hicolor-icon-theme
 BuildRequires:	libboost_context-devel-impl >= 1.75.0
 BuildRequires:	libboost_filesystem-devel-impl >= 1.75.0
+BuildRequires:	libboost_fiber-devel-impl >= 1.75.0
 BuildRequires:	mold
 BuildRequires:	renderdoc-devel
 BuildRequires:	pkgconfig(stb)
@@ -105,11 +106,14 @@ yuzu is an open source Nintendo Switch emulator/debugger.
 %__mkdir -p %_builddir/%_sourcedir
 %__ln -rs %_sourcedir/%name-%version %_builddir/%_sourcedir
 
-for i in tz xbyak cpp-jwt cubeb oaknut VulkanMemoryAllocator simpleini
-do %__rm -rf ./externals/${i}
-%__ln -rs ${i}-* ./externals/${i}
+for i in xbyak cpp-jwt cubeb oaknut VulkanMemoryAllocator simpleini
+do %__rm -rf %_sourcedir/%name-%version/externals/${i}
+%__cp -r  %_sourcedir/${i}-*/ ./externals/${i}
 done
-%__ln -rs %_sourcedir/tzdb_to_nx-*/* ./externals/nx_tzdb/tzdb_to_nx
+%__rm -rf  externals/nx_tzdb/tzdb_to_nx %_sourcedir/tzdb_to_nx-*/externals/tz/tz
+%__cp -r   %_sourcedir/tzdb_to_nx-* ./externals/nx_tzdb/tzdb_to_nx
+%__cp -r  %_sourcedir/tz-* externals/nx_tzdb/tzdb_to_nx/externals/tz/tz
+
 # cp %{SOURCE1} dist/compatibility_list/
 # Enforce package versioning in GUI
 sed -i \
@@ -128,16 +132,20 @@ sed -i \
 sed -i -e '/find_package/s:(Vulkan [1-9\.]* REQUIRED):(Vulkan REQUIRED):' \
 	-e '/find_package/s:(FFmpeg [1-9\.]* REQUIRED):(FFmpeg REQUIRED):' \
 	-e '/find_package(LLVM MODULE COMPONENTS Demangle)/d' \
-	CMakeLists.txt
+	-e '15a find_package(httplib COMPONENTS OpenSSL ZLIB Brotli zstd)' \
+CMakeLists.txt
+sed -i \
+	-e 's|add_subdirectory(cpp-httplib)||g' \
+	-e 's|add_subdirectory(SPIRV-Tools)||g' \
+	-e 's|add_subdirectory(Vulkan-Headers)||g' \
+./externals/CMakeLists.txt
+sed -i '1a set(CMAKE_CXX_FLAGS -Wno-error=return-type)' externals/cubeb/CMakeLists.txt
+
 %build
-ulimit -Sn 40000
+ulimit -Sn 4000
 %cmake \
-	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	-DCMAKE_INSTALL_PREFIX="%{_prefix}" \
-	-DCMAKE_INSTALL_LIBEXEC="%_libexecdir" \
 	-DCMAKE_POSITION_INDEPENDENT_CODE=ON \
 	-DTHREADS_PREFER_PTHREAD_FLAG=ON \
-	-DCMAKE_BUILD_TYPE=Release \
 	-DBUILD_SHARED_LIBS=OFF \
 	-DYUZU_CHECK_SUBMODULES=OFF \
 	-DYUZU_USE_EXTERNAL_SDL2=OFF \
