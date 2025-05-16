@@ -1,0 +1,83 @@
+<services>
+  <service name="obs_scm">
+    <param name="url">https://notabug.org/litucks/torzu.git</param>
+    <param name="scm">git</param>
+    <param name="versionformat">%cd</param>
+    <param name="changesgenerate">enable</param>
+    <param name="submodules">disable</param>
+    <param name="revision">master</param>
+    <param name="filename">torzu</param>
+</service>
+  <service name="obs_scm">
+    <param name="url">https://github.com/eggert/tz.git</param>
+    <param name="scm">git</param>
+    <param name="versionformat">%cd</param>
+    <param name="submodules">enable</param>
+    <param name="revision">main</param>
+    <param name="filename">tz</param>
+</service>
+  <service name="obs_scm">
+    <param name="url">https://github.com/mozilla/cubeb.git</param>
+    <param name="scm">git</param>
+    <param name="versionformat">%cd</param>
+    <param name="submodules">enable</param>
+    <param name="revision">master</param>
+    <param name="filename">cubeb</param>
+</service>
+  <service name="obs_scm">
+    <param name="url">https://github.com/herumi/xbyak.git</param>
+    <param name="scm">git</param>
+    <param name="versionformat">%cd</param>
+    <param name="submodules">enable</param>
+    <param name="revision">master</param>
+    <param name="filename">xbyak</param>
+</service>
+  <service name="obs_scm">
+    <param name="url">https://github.com/arun11299/cpp-jwt.git</param>
+    <param name="scm">git</param>
+    <param name="versionformat">%cd</param>
+    <param name="submodules">enable</param>
+    <param name="revision">master</param>
+    <param name="filename">cpp-jwt</param>
+</service>
+  <service name="obs_scm">
+    <param name="url">https://github.com/lat9nq/tzdb_to_nx.git</param>
+    <param name="scm">git</param>
+    <param name="versionformat">%cd</param>
+    <param name="submodules">enable</param>
+    <param name="revision">main</param>
+    <param name="filename">tzdb_to_nx</param>
+</service>
+  <service name="obs_scm">
+    <param name="url">https://github.com/brofield/simpleini.git</param>
+    <param name="scm">git</param>
+    <param name="versionformat">%cd</param>
+    <param name="submodules">enable</param>
+    <param name="revision">master</param>
+    <param name="filename">simpleini</param>
+</service>
+  <service name="obs_scm">
+    <param name="url">https://github.com/merryhime/oaknut</param>
+    <param name="scm">git</param>
+    <param name="versionformat">%cd</param>
+    <param name="submodules">enable</param>
+    <param name="revision">main</param>
+    <param name="filename">oaknut</param>
+</service>
+  <service name="obs_scm">
+    <param name="url">https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git</param>
+    <param name="scm">git</param>
+    <param name="versionformat">%cd</param>
+    <param name="submodules">enable</param>
+    <param name="revision">master</param>
+    <param name="filename">VulkanMemoryAllocator</param>
+</service>
+  <service name="set_version" mode="buildtime">
+    <param name="basename">torzu</param>
+ </service>
+<service name="download_url">
+  <param name="host">api.yuzu-emu.net</param>
+  <param name="protocol">https</param>
+  <param name="path">/gamedb/</param>
+   <param name="filename">compatibility_list.json</param>
+  </service> </services>
