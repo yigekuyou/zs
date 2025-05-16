@@ -160,8 +160,9 @@ ulimit -Sn 4000
 	-DENABLE_CUBEB=ON \
 	-DUSE_SYSTEM_CURL=ON \
 	-DYUZU_USE_FASTER_LD=ON \
-	-DYUZU_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=NO \
+	-DYUZU_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=OFF \
 	-DYUZU_USE_EXTERNAL_VULKAN_HEADERS=OFF \
+	-DYUZU_USE_EXTERNAL_VULKAN_SPIRV_TOOLS=OFF \
 	-DUSE_DISCORD_PRESENCE=ON \
 	-DYUZU_USE_QT_MULTIMEDIA=ON \
 	-DENABLE_QT_TRANSLATION=ON \
@@ -183,12 +184,11 @@ ulimit -Sn 4000
 %postun
 
 %files
-%{_bindir}/%{name}
 %{_datadir}/applications/*
 %{_datadir}/icons/hicolor/scalable/apps/*
 %{_datadir}/metainfo/*
 %{_datadir}/mime/packages/*
-%{_bindir}/%{name}-cmd
-%{_bindir}/%{name}-room
+%{_bindir}/*
+
 
 %changelog
