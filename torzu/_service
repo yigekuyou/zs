@@ -29,7 +29,7 @@
     <param name="scm">git</param>
     <param name="versionformat">%cd</param>
     <param name="submodules">enable</param>
-    <param name="revision">master</param>
+    <param name="revision">a1ac3750f9a639b5a6c6d6c7da4259b8d6790989</param>
     <param name="filename">xbyak</param>
 </service>
   <service name="obs_scm">
@@ -44,7 +44,7 @@
     <param name="url">https://github.com/lat9nq/tzdb_to_nx.git</param>
     <param name="scm">git</param>
     <param name="versionformat">%cd</param>
-    <param name="submodules">enable</param>
+    <param name="submodules">disable</param>
     <param name="revision">main</param>
     <param name="filename">tzdb_to_nx</param>
 </service>

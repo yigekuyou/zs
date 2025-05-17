@@ -22,12 +22,12 @@ Release:	0
 Summary:	Nintendo Switch emulator/debugger
 License:	GPL-3.0-or-later
 Group:		System/Emulators/Other
-URL:		https://yuzu-emu.org/
+URL:		http://vub63vv26q6v27xzv2dtcd25xumubshogm67yrpaz2rculqxs7jlfqad.onion/torzu-emu/torzu
 Source0:	_service
 # wget https://api.yuzu-emu.org/gamedb/ -O compatibility_list.json
 # It is dynamically changed so we should not use source URL in spec,
 # otherwise it will fail source check when submitted to Factory...
-# Source1:	compatibility_list.json
+Source1:	compatibility_list.json
 BuildRequires:	cmake
 BuildRequires:	discord-rpc-devel
 BuildRequires:	doxygen
@@ -62,7 +62,7 @@ BuildRequires:	pkgconfig(libusb-1.0)
 BuildRequires:	pkgconfig(libva)
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(libzip)
-BuildRequires:	libzstd-devel-static
+BuildRequires:	cmake(zstd)
 BuildRequires:	pkgconfig(nettle)
 BuildRequires:	pkgconfig(nlohmann_json)
 BuildRequires:	pkgconfig(openssl)
@@ -77,6 +77,7 @@ BuildRequires:	cmake(SPIRV-Tools)
 BuildRequires:	cmake(VulkanHeaders)
 # BuildRequires:	cmake(VulkanMemoryAllocator)
 BuildRequires:	git
+BuildRequires:	pkgconfig(gamemode)
 BuildRequires:	cmake(tsl-robin-map)
 #Qt
 BuildRequires:	qt6-gui-private-devel
@@ -114,7 +115,7 @@ done
 %__cp -r   %_sourcedir/tzdb_to_nx-* ./externals/nx_tzdb/tzdb_to_nx
 %__cp -r  %_sourcedir/tz-* externals/nx_tzdb/tzdb_to_nx/externals/tz/tz
 
-# cp %{SOURCE1} dist/compatibility_list/
+cp %{SOURCE1} dist/compatibility_list/
 # Enforce package versioning in GUI
 sed -i \
 -e 's|@GIT_REV@|%{release}|g' \
@@ -135,18 +136,18 @@ sed -i -e '/find_package/s:(Vulkan [1-9\.]* REQUIRED):(Vulkan REQUIRED):' \
 	-e '15a find_package(httplib COMPONENTS OpenSSL ZLIB Brotli zstd)' \
 CMakeLists.txt
 sed -i \
-	-e 's|add_subdirectory(cpp-httplib)||g' \
-	-e 's|add_subdirectory(SPIRV-Tools)||g' \
-	-e 's|add_subdirectory(Vulkan-Headers)||g' \
+	-e 's|add_subdirectory(cpp-httplib)|add_library(cpp-httplib ALIAS httplib::httplib)|g' \
+	-e 's|add_subdirectory(SPIRV-Tools)|add_library(SPIRV-Tools ALIAS Vulkan::SPIRV-Tools)|g' \
+	-e 's|add_subdirectory(Vulkan-Headers)|add_library(Vulkan-Headers ALIAS Vulkan::Headers)|g' \
 ./externals/CMakeLists.txt
 sed -i '1a set(CMAKE_CXX_FLAGS -Wno-error=return-type)' externals/cubeb/CMakeLists.txt
 
 %build
 ulimit -Sn 4000
 %cmake \
+	-DBUILD_SHARED_LIBS=OFF \
 	-DCMAKE_POSITION_INDEPENDENT_CODE=ON \
 	-DTHREADS_PREFER_PTHREAD_FLAG=ON \
-	-DBUILD_SHARED_LIBS=OFF \
 	-DYUZU_CHECK_SUBMODULES=OFF \
 	-DYUZU_USE_EXTERNAL_SDL2=OFF \
 	-DENABLE_PRECOMPILED_HEADERS=OFF \
@@ -174,7 +175,8 @@ ulimit -Sn 4000
 	-DCMAKE_CXX_COMPILER=g++ \
 	-DCMAKE_C_COMPILER=gcc \
 	-DYUZU_ENABLE_PORTABLE=OFF \
-	-DYUZU_DOWNLOAD_ANDROID_VVL=NO
+	-DYUZU_DOWNLOAD_ANDROID_VVL=NO \
+	-DCMAKE_CXX_FLAGS="-mtune=native -march=native"
 %cmake_build
 
 %install
@@ -189,6 +191,5 @@ ulimit -Sn 4000
 %{_datadir}/metainfo/*
 %{_datadir}/mime/packages/*
 %{_bindir}/*
-
 
 %changelog
