@@ -52,23 +52,30 @@ A theme of Hatsune Miku for Grub!
 
 %install
 
-%__mkdir -p %{buildroot}/boot/grub2/themes/
-cp -rp 1080-HatsuneMiku  %{buildroot}/boot/grub2/themes
-cp -rp 4k-HatsuneMiku  %{buildroot}/boot/grub2/themes
-%fdupes %{buildroot}/boot/grub2/themes/1080-HatsuneMiku
-%fdupes %{buildroot}/boot/grub2/themes/4k-HatsuneMiku
+%__mkdir -p %{buildroot}%{_datadir}/grub2/themes/ %{buildroot}/boot/grub2/themes
+cp -rp 1080-HatsuneMiku  %{buildroot}%{_datadir}/grub2/themes
+cp -rp 4k-HatsuneMiku  %{buildroot}%{_datadir}/grub2/themes
+%fdupes %{buildroot}%{_datadir}/grub2/themes/1080-HatsuneMiku
+%fdupes %{buildroot}%{_datadir}/grub2/themes/4k-HatsuneMiku
+cp -rp %{buildroot}%{_datadir}/grub2/themes/* %{buildroot}/boot/grub2/themes
 %check
 
 
 %files 4k
 %doc README.md
+%dir %{_datadir}/grub2/themes
+%{_datadir}/grub2/themes/4k-HatsuneMiku
+%dir /boot/grub2
 %dir /boot/grub2/themes
-/boot/grub2/themes/4k-HatsuneMiku
-
+%ghost /boot/grub2/themes/4k-HatsuneMiku
 
 %files 1080p
 %doc README.md
+%dir %{_datadir}/grub2/themes
+%{_datadir}/grub2/themes/1080-HatsuneMiku
+%dir /boot/grub2
 %dir /boot/grub2/themes
-/boot/grub2/themes/1080-HatsuneMiku
+%ghost /boot/grub2/themes/1080-HatsuneMiku
+
 %changelog
 
