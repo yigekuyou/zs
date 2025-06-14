@@ -1,0 +1,12 @@
+<services>
+  <service name="obs_scm">
+    <param name="scm">git</param>
+    <param name="url">https://github.com/yorunoken/HatsuneMiku.git</param>
+    <param name="versionformat">%cd</param>
+    <param name="filename">grub2-theme-HatsuneMiku</param>
+    <param name="revision">main</param>
+  </service>
+  <service name="set_version" mode="buildtime">
+    <param name="basename">grub2-theme-HatsuneMiku</param>
+</service>
+</services>
