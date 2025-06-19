@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.18)
 project(my_proj LANGUAGES C Fortran) # C is needed to discover Homebrew OpenBLAS
 
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Wno-line-truncation")
+# Add compiler flags to GFortran
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -ffree-line-length-none -Wno-error=return-type -Wno-unused-dummy-argument -Wno-tabs")
 
 # Find BLAS and LAPACK
 include(CMakeFindDependencyMacro)
@@ -43,13 +44,79 @@ file(
   GLOB
   srcs
   CONFIGURE_DEPENDS
-  ${PROJECT_SOURCE_DIR}/*.f90
-  ${PROJECT_SOURCE_DIR}/*.F
-  ${PROJECT_SOURCE_DIR}/ext/*.f90
-  ${PROJECT_SOURCE_DIR}/ext/*.c
-  ${PROJECT_SOURCE_DIR}/libreta_hybrid/*.f90)
-if(NOT ${dislin_FOUND})
-  list(APPEND srcs ${PROJECT_SOURCE_DIR}/noGUI/dislin_d_empty.f90)
+${PROJECT_SOURCE_DIR}/0123dim.f90
+${PROJECT_SOURCE_DIR}/AdNDP.f90
+${PROJECT_SOURCE_DIR}/atmraddens.f90
+${PROJECT_SOURCE_DIR}/basin.f90
+${PROJECT_SOURCE_DIR}/bondorder.f90
+${PROJECT_SOURCE_DIR}/Bspline.f90
+${PROJECT_SOURCE_DIR}/CDA.f90
+${PROJECT_SOURCE_DIR}/CDFT.f90
+${PROJECT_SOURCE_DIR}/cp2kmate.f90
+${PROJECT_SOURCE_DIR}/define.f90
+${PROJECT_SOURCE_DIR}/deloc_aromat.f90
+${PROJECT_SOURCE_DIR}/dislin_d.f90
+${PROJECT_SOURCE_DIR}/DOS.f90
+${PROJECT_SOURCE_DIR}/EDA.f90
+${PROJECT_SOURCE_DIR}/edflib.f90
+${PROJECT_SOURCE_DIR}/ETS_NOCV.f90
+${PROJECT_SOURCE_DIR}/excittrans.f90
+${PROJECT_SOURCE_DIR}/fileIO.f90
+${PROJECT_SOURCE_DIR}/fparser.f90
+${PROJECT_SOURCE_DIR}/function.f90
+${PROJECT_SOURCE_DIR}/fuzzy.f90
+${PROJECT_SOURCE_DIR}/grid.f90
+${PROJECT_SOURCE_DIR}/hyper_polar.f90
+${PROJECT_SOURCE_DIR}/integral.f90
+${PROJECT_SOURCE_DIR}/LSB.f90
+${PROJECT_SOURCE_DIR}/minpack.f90
+${PROJECT_SOURCE_DIR}/Multiwfn.f90
+${PROJECT_SOURCE_DIR}/NAONBO.f90
+${PROJECT_SOURCE_DIR}/O1.f90
+${PROJECT_SOURCE_DIR}/orbcomp.f90
+${PROJECT_SOURCE_DIR}/orbloc.f90
+${PROJECT_SOURCE_DIR}/otherfunc2.f90
+${PROJECT_SOURCE_DIR}/otherfunc3.f90
+${PROJECT_SOURCE_DIR}/otherfunc.f90
+${PROJECT_SOURCE_DIR}/PBC.f90
+${PROJECT_SOURCE_DIR}/plot.f90
+${PROJECT_SOURCE_DIR}/population.f90
+${PROJECT_SOURCE_DIR}/procgriddata.f90
+${PROJECT_SOURCE_DIR}/spectrum.f90
+${PROJECT_SOURCE_DIR}/sub.f90
+${PROJECT_SOURCE_DIR}/surfana.f90
+${PROJECT_SOURCE_DIR}/topology.f90
+${PROJECT_SOURCE_DIR}/util.f90
+${PROJECT_SOURCE_DIR}/visweak.f90
+${PROJECT_SOURCE_DIR}/DFTxclib.F
+${PROJECT_SOURCE_DIR}/Lebedev-Laikov.F
+${PROJECT_SOURCE_DIR}/sym.F
+)
+list(APPEND srcs
+${PROJECT_SOURCE_DIR}/ext/2F2.f90
+${PROJECT_SOURCE_DIR}/ext/2F2.c
+${PROJECT_SOURCE_DIR}/ext/frj.f90
+)
+list(APPEND srcs
+${PROJECT_SOURCE_DIR}/libreta_hybrid/blockhrr_012345.f90
+${PROJECT_SOURCE_DIR}/libreta_hybrid/boysfunc.f90
+${PROJECT_SOURCE_DIR}/libreta_hybrid/ean.f90
+${PROJECT_SOURCE_DIR}/libreta_hybrid/eanvrr_012345.f90
+${PROJECT_SOURCE_DIR}/libreta_hybrid/hrr_012345.f90
+${PROJECT_SOURCE_DIR}/libreta_hybrid/libreta.f90
+${PROJECT_SOURCE_DIR}/libreta_hybrid/naiveeri.f90
+${PROJECT_SOURCE_DIR}/libreta_hybrid/ryspoly.f90
+)
+list(APPEND srcs
+${PROJECT_SOURCE_DIR}/ext/xlib.f90
+${PROJECT_SOURCE_DIR}/GUI.f90
+${PROJECT_SOURCE_DIR}/mouse_rotate.f90
+)
+
+if(NOT ${dislin})
+list(APPEND srcs
+${PROJECT_SOURCE_DIR}/noGUI/dislin_d_empty.f90
+)
 endif()
 
 # Add executable
@@ -63,18 +130,13 @@ target_link_libraries(
           ${ARB_LINK_LIBRARIES}
           ${GMP_LINK_LIBRARIES}
           OpenMP::OpenMP_Fortran
-          $<$<BOOL:${dislin_FOUND}>:${dislin}>
+          $<$<BOOL:${dislin}>:${dislin}>
           $<$<BOOL:${xm_FOUND}>:${Xm}>
   )
 target_include_directories(multiwfn PRIVATE ${GMP_INCLUDE_DIRS} ${FLINT_INCLUDE_DIRS} ${ARB_INCLUDE_DIRS})
 
-# Add compiler flags to GFortran
-target_compile_options(
-  multiwfn
-  PRIVATE
-    $<$<AND:$<COMPILE_LANGUAGE:Fortran>,$<STREQUAL:$<Fortran_COMPILER_ID>,GNU>>:-ffree-line-length-none>
-)
 
 # Install
+include(GNUInstallDirs)
 install(TARGETS multiwfn)
-install(FILES settings.ini DESTINATION ${CMAKE_INSTALL_PREFIX}/etc/multiwfn)
+install(FILES settings.ini DESTINATION ${SYSCONF_INSTALL_DIR}/multiwfn )

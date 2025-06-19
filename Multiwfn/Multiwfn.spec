@@ -39,7 +39,6 @@ Tian Lu, J. Chem. Phys., 161, 082503 (2024)
 %prep
 %autosetup -p1 -n Multiwfn_3.8_dev_src_Linux
 rm dislin_d-11.0.a
-rm ext/no2F2*
 %__sed -i 's|	      |        |g' Lebedev-Laikov.F
 %__cp %{S:1} .
 %build
@@ -50,7 +49,7 @@ rm ext/no2F2*
 %cmake_install
 
 %files
-%_bindir/%{name}
+%_bindir/multiwfn
 %_sysconfdir/*
 %changelog
 
