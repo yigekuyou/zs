@@ -57,9 +57,19 @@ cp -rp 1080-HatsuneMiku  %{buildroot}%{_datadir}/grub2/themes
 cp -rp 4k-HatsuneMiku  %{buildroot}%{_datadir}/grub2/themes
 %fdupes %{buildroot}%{_datadir}/grub2/themes/1080-HatsuneMiku
 %fdupes %{buildroot}%{_datadir}/grub2/themes/4k-HatsuneMiku
-cp -rp %{buildroot}%{_datadir}/grub2/themes/* %{buildroot}/boot/grub2/themes
-%check
-
+cp -rp %{buildroot}%{_datadir}/grub2/themes/*  %{buildroot}/boot/grub2/themes
+%post 4k
+cp -rp %{_datadir}/grub2/themes/4k-HatsuneMiku  /boot/grub2/themes
+%postun 4k
+if [ $1 = 0 ] ; then
+  rm -rf /boot/grub2/themes/4k-HatsuneMiku
+fi
+%post 1080p
+cp -rp %{_datadir}/grub2/themes/1080-HatsuneMiku /boot/grub2/themes
+%postun 1080p
+if [ $1 = 0 ] ; then
+  rm -rf /boot/grub2/themes/1080-HatsuneMiku
+fi
 
 %files 4k
 %doc README.md
