@@ -1,0 +1,25 @@
+<services>
+  <service name="obs_scm">
+    <param name="scm">git</param>
+    <param name="url">https://github.com/Swung0x48/TriangleBin.git</param>
+	<param name="include">README.md</param>
+    <param name="include">TriangleBinNative/src/main/cpp</param>
+    <param name="include">LICENSE</param>
+    <param name="submodules">disable</param>
+    <param name="revision">main</param>
+     <param name="versionformat">%cd</param>
+         <param name="filename">TriangleBin</param>
+  </service>
+    <service name="obs_scm">
+    <param name="url">https://github.com/ocornut/imgui.git</param>
+    <param name="scm">git</param>
+    <param name="versionformat">%cd</param>
+    <param name="changesgenerate">enable</param>
+    <param name="submodules">disable</param>
+    <param name="revision">b295e185ffae72e2f3edea83526b0324484f9f5b</param>
+    <param name="filename">imgui</param>
+  </service>
+  <service name="set_version" mode="buildtime">
+<param name="basename">TriangleBin</param>
+</service>
+</services>
